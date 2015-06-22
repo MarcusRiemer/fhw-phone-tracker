@@ -88,6 +88,10 @@ public class ListWLAN extends Activity {
                         textView.append(String.format("BSSID: %s, Level: %s\n", sr.BSSID, sr.level));
                     }
                 }
+
+                if (config.getAutoSend()) {
+                    send(bufferedResults);
+                }
             }
         }, new IntentFilter(GatherBSSID.BROADCAST_ACTION));
 
@@ -160,7 +164,8 @@ public class ListWLAN extends Activity {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ListWLAN.this, GatherBSSID.class);
+                stopService(intent);
             }
         });
         Button buttonSend = (Button) findViewById(R.id.buttonSend);

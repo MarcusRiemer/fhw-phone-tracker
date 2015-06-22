@@ -13,8 +13,8 @@ import android.support.v4.app.NotificationCompat;
  */
 public class GatherNotificiation extends Notification {
     public static void Show(Context context,
-                            NotificationCompat.Builder builder,
-                            NotificationManager notificationManager) {
+                            NotificationManager notificationManager,
+                            NotificationCompat.Builder builder) {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, ListWLAN.class);
 
@@ -41,14 +41,16 @@ public class GatherNotificiation extends Notification {
     }
 
 
-    public static void ShowActive(NotificationManager notificationManager, Context context) {
+    public static void ShowActive(NotificationManager notificationManager,
+                                  Context context,
+                                  ListWLANConfig cfg) {
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.abc_btn_check_material)
                 .setContentTitle("Gathering BSSIDs ...")
-                .setContentText("Hello World!");
+                .setContentText(String.format("Uploading to: %s", cfg.getServerUrl()));
 
-        Show(context, builder, notificationManager);
+        Show(context, notificationManager, builder);
     }
 
 }

@@ -14,7 +14,7 @@ public class ListWLANConfigTest extends AndroidTestCase {
     public void testSerialization() {
         ListWLANConfig cfgIn = new ListWLANConfig();
         cfgIn.setAutoSend(true);
-        cfgIn.setAutoSendInterval(42);
+        cfgIn.setMaximumScanWait(42);
         cfgIn.setServerUrl("http://localhost");
 
         Parcel parcel = Parcel.obtain();
@@ -24,7 +24,7 @@ public class ListWLANConfigTest extends AndroidTestCase {
         ListWLANConfig cfgOut = ListWLANConfig.CREATOR.createFromParcel(parcel);
 
         assertEquals(cfgIn.getAutoSend(), cfgOut.getAutoSend());
-        assertEquals(cfgIn.getAutoSendInterval(), cfgOut.getAutoSendInterval());
+        assertEquals(cfgIn.getMaximumScanWait(), cfgOut.getMaximumScanWait());
         assertEquals(cfgIn.getServerUrl(), cfgOut.getServerUrl());
 
     }

@@ -28,6 +28,13 @@ public class GatherBSSID extends IntentService {
 
     private WifiManager wifi;
 
+    private boolean running = true;
+
+    /**
+     * Needed to properly unregister
+     */
+    private BroadcastReceiver scanListener;
+
     /**
      * Contains information about all currently known BSSIDs
      */
@@ -80,15 +87,17 @@ public class GatherBSSID extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.i(TAG, "BSSID listening service has been started");
 
-        GatherNotificiation.ShowActive((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE), this);
-
         // Retrieve the configuration from the intent
-        this.config = intent.getExtras().getParcelable(ListWLAN.STATE_KEY_CONFIG);
+        config = intent.getExtras().getParcelable(ListWLAN.STATE_KEY_CONFIG);
+        assert(config != null);
+
+        // Notify the user about what's going on ...
+        GatherNotificiation.ShowActive((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE), this, config);
 
         wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
         // Listen for available scan results
-        BroadcastReceiver scanListener = new BroadcastReceiver() {
+        scanListener = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 refreshScanResults();
@@ -97,17 +106,29 @@ public class GatherBSSID extends IntentService {
 
         registerReceiver(scanListener, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
-        while (true) {
+
+        while (running) {
             try {
                 wifi.startScan();
                 Log.i(TAG, "Triggered scan from service");
 
-                Thread.currentThread().sleep(10000);
+                Thread.currentThread().sleep(config.getMaximumScanWait());
             } catch (InterruptedException e) {
                 Log.e(TAG, "Could not sleep", e);
             }
         }
 
-        //unregisterReceiver(scanListener);
+
+        Log.i(TAG, "Stopped main loop of service");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        running = false;
+
+        unregisterReceiver(scanListener);
+
+        Log.i(TAG, "Told main loop to stop");
     }
 }

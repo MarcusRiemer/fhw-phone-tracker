@@ -13,12 +13,14 @@ public class ListWLANConfig implements Parcelable {
     private boolean autoSend = false;
     private boolean showBSSIDs = true;
 
-    private int autoSendInterval = 10000;
+    // The maximum amount of time that should pass between two scans
+    private int maximumScanWait = 60000;
 
     //private String serverUrl = "http://172.26.0.114:8000/tracker.php";
     private String serverUrl = "https://stud.fh-wedel.de/~inf100314/tracker/tracker.php";
 
-    private String phoneID = "hehoe";
+    private String phoneID = "mri";
+    //private String phoneID = "hehoe";
 
     /**
      * Used to filter a subset of interesting BSSIDS
@@ -59,7 +61,7 @@ public class ListWLANConfig implements Parcelable {
         autoSend = (boolean) parcel.readValue(null);
         showBSSIDs = (boolean) parcel.readValue(null);
         serverUrl = parcel.readString();
-        autoSendInterval = parcel.readInt();
+        maximumScanWait = parcel.readInt();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class ListWLANConfig implements Parcelable {
         parcel.writeValue(autoSend);
         parcel.writeValue(showBSSIDs);
         parcel.writeString(serverUrl);
-        parcel.writeInt(autoSendInterval);
+        parcel.writeInt(maximumScanWait);
     }
 
     /**
@@ -97,15 +99,15 @@ public class ListWLANConfig implements Parcelable {
     /**
      * @return The interval (in ms) an autosend action occurs.
      */
-    public int getAutoSendInterval() {
-        return autoSendInterval;
+    public int getMaximumScanWait() {
+        return maximumScanWait;
     }
 
     /**
-     * @param autoSendInterval The interval (in ms) an autosend action occurs.
+     * @param maximumScanWait The interval (in ms) an autosend action occurs.
      */
-    public void setAutoSendInterval(int autoSendInterval) {
-        this.autoSendInterval = autoSendInterval;
+    public void setMaximumScanWait(int maximumScanWait) {
+        this.maximumScanWait = maximumScanWait;
     }
 
     /**
