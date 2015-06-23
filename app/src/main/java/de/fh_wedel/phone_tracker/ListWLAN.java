@@ -56,6 +56,7 @@ public class ListWLAN extends Activity {
             public void onServiceConnected(ComponentName componentName, IBinder service) {
                 GatherBSSID.LocalBinder localBinder = (GatherBSSID.LocalBinder) service;
                 serviceBinder = localBinder.getService();
+                serviceBinder.setConfig(config);
             }
 
             @Override

@@ -79,6 +79,15 @@ public class GatherBSSID extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     /**
+     * As this service is always used in the same process as the UI activity it is possible to
+     * share the exact same configuration.
+     * @param config
+     */
+    public void setConfig(ListWLANConfig config) {
+        this.config = config;
+    }
+
+    /**
      * Throws away all known scan results and stores new scan results.
      */
     public void refreshScanResults() {
