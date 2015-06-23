@@ -49,10 +49,9 @@ public class GatherBSSID extends Service {
     public static String BROADCAST_ACTION = "fhw.gather.broadcast";
 
     public static String KEY_BROADCAST_SCANS = "scans";
+    public static String KEY_BROADCAST_SENT = "sent";
 
     private WifiManager wifi;
-
-    private boolean running = true;
 
     /**
      * Needed to properly unregister
@@ -150,12 +149,11 @@ public class GatherBSSID extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        running = false;
 
         unregisterReceiver(scanListener);
         GatherNotificiation.Stop(getNotificationManager());
 
-        Log.i(TAG, "Told main loop to stop");
+        Log.i(TAG, "Stopped gathering service");
     }
 
     @Override
@@ -180,6 +178,11 @@ public class GatherBSSID extends Service {
             @Override
             protected void onPostExecute(Exception result) {
                 if (result == null) {
+                    Intent localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.putExtra(KEY_BROADCAST_SENT, "Send finished");
+
+                    LocalBroadcastManager.getInstance(self).sendBroadcast(localIntent);
+
                     //self.textView.append("Send finished\n");
                 } else {
                     //self.textView.append(String.format("Send failed: %s\n", result.getMessage()));

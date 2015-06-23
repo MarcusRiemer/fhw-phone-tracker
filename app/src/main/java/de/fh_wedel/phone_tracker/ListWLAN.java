@@ -80,20 +80,8 @@ public class ListWLAN extends Activity {
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                bufferedResults = (ScanResult[]) intent.getExtras().getParcelableArray(GatherBSSID.KEY_BROADCAST_SCANS);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                String currentDateandTime = sdf.format(new Date());
-
-                Log.i(TAG, String.format("UI received %d interesting APs at %s", bufferedResults.length, currentDateandTime));
-
-                textView.append(String.format("\nFound %s APs in range at %s\n", bufferedResults.length, currentDateandTime));
-
-                if (config.getShowBSSIDs() == true) {
-                    for (ScanResult sr : bufferedResults) {
-                        textView.append(String.format("BSSID: %s, Level: %s\n", sr.BSSID, sr.level));
-                    }
-                }
+                onNewResults((ScanResult[]) intent.getExtras().getParcelableArray(GatherBSSID.KEY_BROADCAST_SCANS));
+                onSendFinished(intent.getExtras().getString(GatherBSSID.KEY_BROADCAST_SENT, null));
             }
         }, new IntentFilter(GatherBSSID.BROADCAST_ACTION));
 
@@ -228,6 +216,31 @@ public class ListWLAN extends Activity {
 
     private void onClear() {
         textView.setText("");
+    }
+
+    private void onNewResults(ScanResult[] results) {
+        if (results != null) {
+            bufferedResults = results;
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String currentDateandTime = sdf.format(new Date());
+
+            Log.i(TAG, String.format("UI received %d interesting APs at %s", bufferedResults.length, currentDateandTime));
+
+            textView.append(String.format("\nFound %s APs in range at %s\n", bufferedResults.length, currentDateandTime));
+
+            if (config.getShowBSSIDs() == true) {
+                for (ScanResult sr : bufferedResults) {
+                    textView.append(String.format("BSSID: %s, Level: %s\n", sr.BSSID, sr.level));
+                }
+            }
+        }
+    }
+
+    private void onSendFinished(String result) {
+        if (result != null) {
+            this.textView.append(result + "\n");
+        }
     }
 
 }
