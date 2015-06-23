@@ -49,7 +49,7 @@ public class GatherNotificiation extends Notification {
                                   ListWLANConfig cfg) {
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.abc_btn_check_material)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Gathering BSSIDs ...")
                 .setContentText(String.format("Uploading to: %s", cfg.getServerUrl()));
 
