@@ -1,6 +1,5 @@
 package de.fh_wedel.phone_tracker;
 
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -12,7 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
