@@ -47,9 +47,11 @@ public class GatherNotificiation extends Notification {
     public static void ShowActive(NotificationManager notificationManager,
                                   Context context,
                                   ListWLANConfig cfg) {
+
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle("Gathering BSSIDs ...")
                 .setContentText(String.format("Uploading to: %s", cfg.getServerUrl()));
 
