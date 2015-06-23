@@ -17,7 +17,8 @@ public class ListWLANConfig implements Parcelable {
     private int maximumScanWait = 60000;
 
     //private String serverUrl = "http://172.26.0.114:8000/tracker.php";
-    private String serverUrl = "https://stud.fh-wedel.de/~inf100314/tracker/tracker.php";
+    //private String serverUrl = "https://stud.fh-wedel.de/~inf100314/tracker/tracker.php";
+    private String serverUrl = "http://www.fh-wedel.de/~mri/tracker/tracker.php";
 
     private String phoneID = "mri";
     //private String phoneID = "hehoe";

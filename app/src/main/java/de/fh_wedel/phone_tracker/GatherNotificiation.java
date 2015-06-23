@@ -12,6 +12,9 @@ import android.support.v4.app.NotificationCompat;
  * Created by marcus on 19/06/15.
  */
 public class GatherNotificiation extends Notification {
+
+    private static int id = 0;
+
     public static void Show(Context context,
                             NotificationManager notificationManager,
                             NotificationCompat.Builder builder) {
@@ -37,7 +40,7 @@ public class GatherNotificiation extends Notification {
                 );
         builder.setContentIntent(resultPendingIntent);
         // mId allows you to update the notification later on.
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(id, builder.build());
     }
 
 
@@ -51,6 +54,10 @@ public class GatherNotificiation extends Notification {
                 .setContentText(String.format("Uploading to: %s", cfg.getServerUrl()));
 
         Show(context, notificationManager, builder);
+    }
+
+    public static void Stop(NotificationManager notificationManager) {
+        notificationManager.cancel(id);
     }
 
 }
