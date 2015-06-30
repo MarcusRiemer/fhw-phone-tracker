@@ -10,7 +10,7 @@ import java.util.Set;
  * User defined settings on how, where and when to scan for WiFi BSSIDs.
  */
 public class ListWLANConfig implements Parcelable {
-    private boolean autoSend = false;
+    private boolean autoSend = true;
     private boolean showBSSIDs = true;
 
     // The maximum amount of time that should pass between two scans

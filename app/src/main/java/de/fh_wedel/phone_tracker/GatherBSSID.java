@@ -133,24 +133,32 @@ public class GatherBSSID extends Service {
         Log.i(TAG, "BSSID listening service has been started");
 
         // Retrieve the configuration from the intent
-        config = intent.getExtras().getParcelable(ListWLAN.STATE_KEY_CONFIG);
-        assert(config != null);
+        if (config == null) {
+            Log.i(TAG, "No config available, using config from parcel");
+            config = intent.getExtras().getParcelable(ListWLAN.STATE_KEY_CONFIG);
+            assert (config != null);
+        }
+
+        // Listener for scan results
+        if (scanListener == null) {
+            Log.i(TAG, "No broadcast receiver available, registering new one");
+            scanListener = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    refreshScanResults();
+                }
+            };
+
+            // Listen for found access points and immediatly do a first scan
+            wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            registerReceiver(scanListener, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            wifi.startScan();
+        }
 
         // Notify the user about what's going on ...
         GatherNotificiation.ShowActive(getNotificationManager(), this, config);
 
-        // Listener for scan results
-        scanListener = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                refreshScanResults();
-            }
-        };
 
-        // Listen for found access points and immediatly do a first scan
-        wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        registerReceiver(scanListener, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifi.startScan();
 
         return (Service.START_STICKY);
     }
