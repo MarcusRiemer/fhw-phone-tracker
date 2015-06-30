@@ -30,6 +30,7 @@ public class ListWLANConfig implements Parcelable {
 
     public ListWLANConfig() {
         interestingSSIDs.add("FH-Visitor");
+        interestingSSIDs.add("FH-Mitarbeiter");
     }
 
     /**

@@ -26,11 +26,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Does the actual scanning of BSSIDs in the background.
  */
 public class GatherBSSID extends Service {
+
+    private Timer timer;
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -141,6 +145,8 @@ public class GatherBSSID extends Service {
 
         // Listener for scan results
         if (scanListener == null) {
+            assert (timer == null);
+
             Log.i(TAG, "No broadcast receiver available, registering new one");
             scanListener = new BroadcastReceiver() {
                 @Override
@@ -152,13 +158,18 @@ public class GatherBSSID extends Service {
             // Listen for found access points and immediatly do a first scan
             wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
             registerReceiver(scanListener, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            wifi.startScan();
+
+            timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    wifi.startScan();
+                }
+            }, 0, 60000);
         }
 
         // Notify the user about what's going on ...
         GatherNotificiation.ShowActive(getNotificationManager(), this, config);
-
-
 
         return (Service.START_STICKY);
     }
@@ -167,7 +178,13 @@ public class GatherBSSID extends Service {
     public void onDestroy() {
         super.onDestroy();
 
+        // Stop asking for new scans
+        timer.cancel();
+
+        // Stop listening for scans
         unregisterReceiver(scanListener);
+
+        // Remove the tracking notification
         GatherNotificiation.Stop(getNotificationManager());
 
         Log.i(TAG, "Stopped gathering service");
